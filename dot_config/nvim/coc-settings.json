@@ -1,0 +1,22 @@
+{
+  "coc.preferences.formatOnSave": true,
+  "[cpp][c]": {
+    "coc.preferences.formatOnSave": false,
+  },
+  "suggest.noselect": true,
+  "inlayHint.enable": false,
+  "go.goplsOptions": {
+    "templateExtensions": [
+      "gotmpl"
+    ],
+    "gofumpt": true,
+    "codelenses": {
+      "test": true,
+      "run_govulncheck": true,
+      "tidy": true,
+      "vendor": true,
+      "upgrade_dependency": true,
+    },
+  },
+  "cSpell.userWords": [],
+}

@@ -1,0 +1,81 @@
+#!/bin/zsh
+
+# zinit bootstrap
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+  command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+  command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git"
+fi
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh" && unalias zi
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# zinit annex
+zinit light-mode for zdharma-continuum/zinit-annex-bin-gem-node
+zinit light-mode for zdharma-continuum/zinit-annex-patch-dl
+
+# completion
+setopt noautomenu
+fpath=(~/.zsh/completion /usr/share/zsh/vendor-completions $fpath)
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+	compinit -i;
+else
+	compinit -C;
+fi
+
+# History
+export HISTFILE=$HOME/.zsh_history
+export HISTSIZE=100000
+export SAVEHIST=$HISTSIZE
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+
+# misc
+bindkey \^U backward-kill-line
+
+# Themes
+export STARSHIP_CONFIG=~/.config/starship/config.toml
+zinit lucid from"gh-r" as"null" for sbin"**/starship" @starship/starship
+eval "$(starship init zsh)"
+
+# Autojump
+export _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS --layout=reverse --height=30%"
+zinit lucid from"gh-r" as"null" for completions sbin"**/zoxide" @ajeetdsouza/zoxide
+eval "$(zoxide init zsh)"
+
+# FZF
+export FZF_DEFAULT_COMMAND='fd --type f --color never'
+export FZF_DEFAULT_OPTS='--color=bg+:-1,bg:-1 --preview-window=0 --no-separator --prompt="❯ " --pointer=">"'
+export FZF_CTRL_T_COMMAND='fd --type f --color never'
+export FZF_ALT_C_COMMAND='fd --type d --color never'
+zinit lucid from"gh-r" as"null" for sbin"**/fzf" @junegunn/fzf
+zinit for https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh
+
+# Tools
+zinit lucid from"gh-r" as"null" for sbin"**/tealdeer* -> tldr" @dbrgn/tealdeer
+zinit lucid from"gh-r" as"null" for sbin"**/delta" @dandavison/delta
+zinit lucid from"gh-r" as"null" atload"alias ls=lsd" for sbin"**/lsd" @lsd-rs/lsd
+zinit lucid from"gh-r" as"null" for sbin"**/dust" @bootandy/dust
+zinit lucid from"gh-r" as"null" for sbin"**/duf" @muesli/duf
+zinit lucid from"gh-r" as"null" for sbin"**/fd" @sharkdp/fd
+zinit lucid from"gh-r" as"null" for sbin"**/bat" @sharkdp/bat
+zinit lucid from"gh-r" as"null" for sbin"**/rg" @burntsushi/ripgrep
+zinit lucid from"gh-r" as"null" for sbin"**/procs" @dalance/procs
+zinit lucid from"gh-r" as"null" for sbin"**/yq* -> yq" @mikefarah/yq
+zinit lucid from"gh-r" as"null" for sbin"**/jq* -> jq" @jqlang/jq
+zinit lucid from"gh-r" as"null" for sbin"**/tokei* -> tokei" @xampprocky/tokei
+
+# Awesome
+# zinit light "jeffreytse/zsh-vi-mode"
+zinit light "zsh-users/zsh-completions"
+zinit light "zsh-users/zsh-autosuggestions"
+zinit light "zsh-users/zsh-syntax-highlighting"
+ZSH_HIGHLIGHT_STYLES[path]=none
+ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green'
+ZSH_HIGHLIGHT_STYLES[precommand]='fg=green'
+ZSH_HIGHLIGHT_STYLES[autodirectory]='fg=green'
+
+# vim: sw=2 ts=2 et
